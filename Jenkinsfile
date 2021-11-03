@@ -47,7 +47,7 @@ pipeline {
             steps {
                 script {
                     dir('kubernetes/') {
-                        withCredentials([string(credentialsId: 'datree_token', variable: 'DATREE_TOKEN')]) {
+                        withEnv(['DATREE_TOKEN=CUuBJnjHgwVYGi5EZQPLr4']) {
                             sh '''
                             wget https://get.helm.sh/helm-v3.7.1-linux-amd64.tar.gz
                             tar -xvzf helm-v3.7.1-linux-amd64.tar.gz
