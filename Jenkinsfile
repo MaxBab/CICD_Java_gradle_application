@@ -47,13 +47,15 @@ pipeline {
             steps {
                 script {
                     dir('kubernetes/') {
-                        sh '''
-                        wget https://get.helm.sh/helm-v3.7.1-linux-amd64.tar.gz
-                        tar -xvzf helm-v3.7.1-linux-amd64.tar.gz
-                        sudo cp linux-amd64/helm /usr/bin
-                        helm version
-                        helm datree test myapp/
-                        '''
+                        withCredentials([string(credentialsId: 'datree_token', variable: 'DATREE_TOKEN')]) {
+                            sh '''
+                            wget https://get.helm.sh/helm-v3.7.1-linux-amd64.tar.gz
+                            tar -xvzf helm-v3.7.1-linux-amd64.tar.gz
+                            sudo cp linux-amd64/helm /usr/bin
+                            helm version
+                            helm datree test myapp/
+                            '''
+                        }
                     }
                 }
             }
