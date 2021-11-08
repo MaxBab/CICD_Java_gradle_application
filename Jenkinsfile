@@ -49,10 +49,6 @@ pipeline {
                     dir('kubernetes') {
                         withEnv(['DATREE_TOKEN=CUuBJnjHgwVYGi5EZQPLr4']) {
                             sh '''
-                            wget https://get.helm.sh/helm-v3.7.1-linux-amd64.tar.gz
-                            tar -xvzf helm-v3.7.1-linux-amd64.tar.gz
-                            sudo cp linux-amd64/helm /usr/bin
-                            helm version
                             helm datree test myapp/
                             '''
                         }
