@@ -73,6 +73,16 @@ pipeline {
             }
         }
 
+        stage("Manual approval") {
+            steps {
+                script {
+                    timeout(10) {
+                        input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: "Deploy")
+                    }
+                }
+            }
+        }
+
         stage("Deploying application of k8s cluster") {
             steps {
                 script {
@@ -80,6 +90,16 @@ pipeline {
                         dir('kubernetes') {
                             sh 'helm upgrade --install --set image.repository="10.0.153.248:8083/springapp" --set image.tag="${VERSION}" myjavaapp myapp/'
                         }
+                    }
+                }
+            }
+        }
+
+        stage("Verify app deployment") {
+            steps {
+                script {
+                    withCredentials([kubeconfigFile(credentialsId: 'kubernetes-config', variable: 'KUBECONFIG')]) {
+                        sh 'kubectl run curl --image curlimages/curl -i --rm --restart Never -- curl myjavaapp-myapp:8080'
                     }
                 }
             }
